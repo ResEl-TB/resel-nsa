@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -f /etc/nsa/.disable ]
+then
+  exit 1
+fi
+
+source /etc/nsa/config
+
+{
+  sleep 60
+  kill $$
+} &
+
+for dir in /var/lib/nsa/ready/*
+do
+  if [ -d $dir ]
+  then
+    category=$(basename $dir)
+    for file in /var/lib/nsa/ready/$category/*
+    do
+      source /etc/nsa/profiles.d/$category
+      if [ ! -s $file ] || ([ -f $file ] && curl -fs -H "X-Warp10-Token: $TOKEN" -H 'Transfer-Encoding: chunked' -T $file $ENDPOINT)
+      then
+          rm -f $file
+      fi
+    done
+  fi
+done

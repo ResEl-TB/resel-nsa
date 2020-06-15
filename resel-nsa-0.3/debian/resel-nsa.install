@@ -1,0 +1,3 @@
+etc/* etc
+var/lib/* var/lib
+usr/libexec/* usr/libexec

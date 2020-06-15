@@ -1,0 +1,74 @@
+#!/bin/bash
+
+if [ -f /etc/nsa/.disable ]
+then
+  exit 1
+fi
+
+set -aeu
+source /etc/nsa/config
+for lib in /etc/nsa/functions/*
+do
+  source $lib
+done
+declare -A DURATIONS
+DURATIONS=([m]=1 [h]=60 [d]=1440 [w]=10080)
+MINUTES=$(($(date +%s) / 60))
+TIMESTAMP=$(($MINUTES * 60))000000
+set +a
+
+{
+  sleep 75
+  kill $$
+} &
+
+rand()
+{
+  echo $(od -vAn -N4 -tu4 /dev/urandom);
+}
+
+process()
+{
+  if [ $(($MINUTES % $2)) -ne 0 ]
+  then
+    return
+  fi
+  base=$(basename $1)
+  category=${base%%.*}
+  pending_dir=/var/lib/nsa/pending/$category
+  ready_dir=/var/lib/nsa/ready/$category
+  mkdir -p $pending_dir
+  mkdir -p $ready_dir
+  chmod 6770 $pending_dir
+  chmod 6770 $ready_dir
+  (
+    set -a
+    source /etc/nsa/profiles.d/$category
+    set +a
+    filename=$pending_dir/nsa.$TIMESTAMP.$(rand)
+    $1 | sed "/^{/! s/^/./; /}/! s/ /{} /; s/^/$TIMESTAMP\/\/ $base/" > $filename
+    mv $filename $ready_dir
+  )&
+}
+
+for element in /etc/nsa/mods-enabled/*
+do
+  if [ -f $element ]
+  then
+    process $element 1
+  elif [ -d $element ]
+  then
+    period=$(basename $element)
+    value=${period::-1}
+    suffix=${period: -1}
+    minutes=$(($value * ${DURATIONS[$suffix]}))
+    for file in $element/*
+    do
+      if [ -f $file ]
+      then
+        process $file $minutes
+      fi
+    done
+  fi
+done
+wait
