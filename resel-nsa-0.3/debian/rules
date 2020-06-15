@@ -5,9 +5,9 @@
 
 override_dh_fixperms:
 	dh_fixperms
+	chmod 755 etc/nsa/*
 	chmod 644 etc/nsa/.disable
 	chmod 640 etc/nsa/config
-	chmod 755 etc/nsa/mods-*
 	chmod 750 etc/nsa/profiles.d
 	chmod 750 usr/libexec/nsa/nsa-*
 	chmod -R 6770 var/lib/nsa
