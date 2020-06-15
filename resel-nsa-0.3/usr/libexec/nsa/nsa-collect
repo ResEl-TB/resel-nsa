@@ -5,6 +5,7 @@ then
   exit 1
 fi
 
+shopt -s nullglob
 set -aeu
 source /etc/nsa/config
 for lib in /etc/nsa/functions/*
