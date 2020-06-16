@@ -4,8 +4,7 @@ ARCHIVE=$(shell echo $(PACKAGE) | sed 's/\(.*\)-/\1_/')
 
 deb:
 	find . -name .keep -delete
-	tar --exclude debian -C $(PACKAGE)/ -cvzf $(ARCHIVE).orig.tar.gz .
-	cd $(PACKAGE); debuild -us -uc
+	cd $(PACKAGE); debuild -us -uc -b
 
 clean:
 	rm -f $(ARCHIVE)*
