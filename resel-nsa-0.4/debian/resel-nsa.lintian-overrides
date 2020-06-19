@@ -1,3 +1,3 @@
 resel-nsa: non-standard-file-perm
 resel-nsa: non-standard-dir-perm
-resel-nsa: executable-is-not-world-readable
+resel-nsa: non-standard-executable-perm

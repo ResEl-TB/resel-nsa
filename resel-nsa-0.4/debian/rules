@@ -9,5 +9,6 @@ override_dh_fixperms:
 	chmod 644 debian/resel-nsa/etc/nsa/.disable
 	chmod 640 debian/resel-nsa/etc/nsa/config
 	chmod 750 debian/resel-nsa/etc/nsa/profiles.d
-	chmod 750 debian/resel-nsa/usr/libexec/nsa/nsa-*
+	chmod 754 debian/resel-nsa/usr/libexec/nsa/nsa-*
+	chmod 744 debian/resel-nsa/usr/bin/nsa-admin
 	chmod -R 6770 debian/resel-nsa/var/lib/nsa

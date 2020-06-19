@@ -1,0 +1,129 @@
+#!/bin/bash
+
+function process_services
+{
+  while true
+  do
+    menuitems=()
+    for service in $(find /etc/nsa/mods-available -type f)
+    do
+      links=()
+      for link in $(find /etc/nsa/mods-enabled -type l)
+      do
+        [ "$(realpath $link)" == "$service" ] && links+=($(cut -d / -f 5 <<< $link))
+      done
+      if (( ${#links} == 0 ))
+      then
+        item="Désactivé"
+      else
+        tail_links=("${links[@]:1}")
+        item=$(printf "Chaque $links"; printf "%s" "${tail_links[@]/#/, }")
+      fi
+      menuitems+=("$(basename $service)" "$item")
+    done
+    choice=$(whiptail --title "ResEl NSA" --cancel-button "Retour" \
+                      --menu "Services installés" 20 70 11 \
+                      "${menuitems[@]}" 3>&1 1>&2 2>&3) || break
+    old_links=()
+    durations=()
+    for link in $(find /etc/nsa/mods-enabled/ -type l)
+    do
+      if [ "$(basename $(realpath $link))" == "$choice" ]
+      then
+        old_links+=($link)
+        durations+=($(cut -d / -f 5 <<< $link))
+      fi
+    done
+    while true
+    do
+      new_durations=$(whiptail --title "ResEl NSA" --inputbox "Veuillez indiquer les périodes "\
+"d'exécution du service $choice séparées par des espaces. Laissez la case vide pour désactiver "\
+"le service.\nSuffixes reconnus : m (minutes), h (heures), d (jours), w (semaines).\nNote : un "\
+"service devrait avoir une unique période d'exécution.\nExemple : 10m" 13 80 \
+                               "${durations[*]}" 3>&1 1>&2 2>&3) || break
+      if [[ $new_durations =~ ^([0-9]+[mhdw]( [0-9]+[mhdw])*)?$ ]]
+      then
+        for link in ${old_links[@]}
+        do
+          rm -f $link
+        done
+        real_path=$(find /etc/nsa/mods-available -name $choice)
+        for duration in ${new_durations[@]}
+        do
+          mkdir -p /etc/nsa/mods-enabled/$duration
+          ln -s $real_path /etc/nsa/mods-enabled/$duration
+        done
+        break
+      fi
+    done
+  done
+}
+
+function process_tokens
+{
+  while true
+  do
+    menuitems=()
+    for module in $(find /etc/nsa/profiles.d -type f)
+    do
+      menuitems+=("$(basename $module)" "")
+    done
+    choice=$(whiptail --title "ResEl NSA" --cancel-button "Retour" --noitem \
+                      --menu "Modules installés" 15 50 6 \
+                      "${menuitems[@]}" 3>&1 1>&2 2>&3) || break
+    real_path=/etc/nsa/profiles.d/$choice
+    source $real_path
+    new_token=$(whiptail --title "ResEl NSA" --inputbox "Veuillez indiquer le jeton "\
+"d'authentification du module $choice." 8 80 "$TOKEN" 3>&1 1>&2 2>&3) || continue
+    sed -i '/^TOKEN=/d' $real_path
+    printf "TOKEN='$new_token'\n" >> $real_path
+  done
+}
+
+function process_endpoint
+{
+  real_path=/etc/nsa/config
+  source $real_path
+  new_endpoint=$(whiptail --title "ResEl NSA" --inputbox "Veuillez indiquer le point de "\
+"terminaison de l'API Warp 10." 8 80 "$ENDPOINT" 3>&1 1>&2 2>&3) || return
+  printf "TOKEN='$TOKEN'\nENDPOINT='$new_endpoint'\n" > $real_path
+}
+
+while true
+do
+  if [ -f /etc/nsa/.disable ]
+  then
+    tag=enable
+    item="Activer le collecteur"
+  else
+    tag=disable
+    item="Désactiver le collecteur"
+  fi
+
+  case $(whiptail --title "ResEl NSA" --cancel-button "Quitter" --notags \
+                  --menu "Menu principal" 12 50 4 \
+                  "services" "Configurer les services" \
+                  "tokens" "Configurer les jetons des modules" \
+                  "endpoint" "Configurer le point de terminaison" \
+                  $tag "$item" 3>&1 1>&2 2>&3) in
+  "services")
+    process_services
+  ;;
+  "tokens")
+    process_tokens
+  ;;
+  "endpoint")
+    process_endpoint
+  ;;
+  "enable")
+    rm -f /etc/nsa/.disable
+  ;;
+  "disable")
+    whiptail --title "ResEl NSA" --yesno "La désactivation du collecteur n'est pas une opération "\
+"à prendre à la légère. Êtes-vous sûr de vouloir continuer ?" 8 70 && touch /etc/nsa/.disable
+  ;;
+  *)
+    exit 0
+  ;;
+  esac
+done

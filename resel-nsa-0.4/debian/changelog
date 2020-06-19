@@ -1,0 +1,23 @@
+resel-nsa (0.4-1) UNRELEASED; urgency=low
+
+  * Add a manager to simplify administrative tasks and create manpages.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Fri, 19 Jun 2020 03:32:00 +0200
+
+resel-nsa (0.3-1) UNRELEASED; urgency=low
+
+  * Fix permissions and dependencies and split the package into sub-packages.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Mon, 15 Jun 2020 07:25:00 +0200
+
+resel-nsa (0.2-1) UNLELEASED; urgency=low
+
+  * Further improvements.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Mon, 15 Jun 2020 06:35:25 +0200
+
+resel-nsa (0.1-1) UNRELEASED; urgency=low
+
+  * Initial release.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Sun, 05 Jan 2020 18:23:25 +0100

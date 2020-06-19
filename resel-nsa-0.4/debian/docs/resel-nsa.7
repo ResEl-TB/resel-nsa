@@ -1,0 +1,73 @@
+.TH resel-nsa 7
+.SH NOM
+resel-nsa \- Outil de supervision du ResEl
+.SH DESCRIPTION
+.B ResEl NSA
+est l'outil de supervision des machines déployé au ResEl. Il est composé d'un
+collecteur, \fBnsa-collect\fR, chargé de lire la configuration de
+.B ResEl NSA
+et de lancer en conséquence les services, et d'un agent de communication,
+\fBnsa-send\fR, chargé d'envoyer les données collectées dans une base Warp 10.
+.SS Arborescence
+La configuration de
+.B ResEl NSA
+est séparée en plusieurs fichiers et répertoires sous la racine
+.I /etc/nsa
+:
+.RS 4m
+.TP 16m
+.I .disable
+Fichier permettant, s'il est présent, de désactiver les composants de
+.B ResEl NSA
+jusqu'à sa suppression. Le fichier est présent par défaut.
+.TP
+.I config
+Configuration des variables génériques de \fBResEl NSA\fR.
+.TP
+.I functions
+Dossier permettant de stocker des fonctions utilisables depuis les services.
+.TP
+.I mods-available
+Dossier contenant les divers services installés.
+.TP
+.I mods-enabled
+Dossier contenant les liens symboliques vers les services en vue de leur
+exécution.
+.TP
+.I profiles.d
+Dossier contenant les configurations des modules installés. Les fichiers de
+configurations devraient définir au minimum une variable
+.B TOKEN
+représentant le jeton d'authentification du module auprès de la base Warp 10.
+.RE
+.SS Exécution des services
+L'exécution des services est asservie aux liens symboliques présents dans le
+répertoire \fImods-enabled\fR. Ce répertoire doit être organisé de la manière
+suivante : au premier niveau doivent être présents des dossiers indiquant la
+période d'exécution des services et au deuxième niveau doivent être présents
+des liens symboliques vers lesdits services (sous \fImods-available\fR).
+.PP
+Les dossiers de premier niveau doivent être de la forme
+\fBpréfixe\fIsuffixe\fR, avec :
+.RS 4m
+.TP 9m
+.B préfixe
+Entier représentant le nombre d'unités de temps.
+.TP
+.I suffixe
+Unité de temps parmi
+.I m
+(minutes),
+.I h
+(heures),
+.I d
+(jours),
+.I w
+(semaines).
+.RE
+.PP
+L'utilisation de l'outil
+.BR nsa-admin (8)
+permet de gérer automatiquement cette arborescence.
+.SH VOIR AUSSI
+.BR nsa-admin (8)
