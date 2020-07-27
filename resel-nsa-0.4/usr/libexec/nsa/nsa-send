@@ -13,12 +13,12 @@ source /etc/nsa/config
   kill $$
 } &
 
-for dir in /var/lib/nsa/ready/*
+for dir in /var/spool/nsa/ready/*
 do
   if [ -d $dir ]
   then
     category=$(basename $dir)
-    for file in /var/lib/nsa/ready/$category/*
+    for file in /var/spool/nsa/ready/$category/*
     do
       source /etc/nsa/profiles.d/$category
       if [ ! -s $file ] || ([ -f $file ] && curl -fs -H "X-Warp10-Token: $TOKEN" -H 'Transfer-Encoding: chunked' -T $file $ENDPOINT)

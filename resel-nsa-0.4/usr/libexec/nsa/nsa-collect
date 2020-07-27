@@ -36,8 +36,8 @@ process()
   fi
   base=$(basename $1)
   category=${base%%.*}
-  pending_dir=/var/lib/nsa/pending/$category
-  ready_dir=/var/lib/nsa/ready/$category
+  pending_dir=/var/spool/nsa/pending/$category
+  ready_dir=/var/spool/nsa/ready/$category
   mkdir -p $pending_dir
   mkdir -p $ready_dir
   chmod 6770 $pending_dir
