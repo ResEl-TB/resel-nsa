@@ -1,3 +1,11 @@
+resel-nsa (0.5-1) UNRELEASED; urgency=low
+
+  * Add multiprocessing capabilities,
+  * Add log rotation,
+  * Improve code quality.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Wed, 14 Oct 2020 23:22:00 +0200
+
 resel-nsa (0.4-1) UNRELEASED; urgency=low
 
   * Add a manager to simplify administrative tasks and create manpages.

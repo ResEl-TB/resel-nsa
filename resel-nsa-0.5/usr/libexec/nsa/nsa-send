@@ -1,0 +1,90 @@
+#!/bin/bash
+
+if [ -f /etc/nsa/.disable ]
+then
+  exit 1
+fi
+
+shopt -s nullglob
+set -aeu
+LOG_DIR=/var/log/resel-nsa
+LOG_DATE_FORMAT='%Y-%m-%d %H:%M:%S'
+SEND_JOBS=$(getconf _NPROCESSORS_ONLN)
+SEND_TIMEOUT=1m
+source /etc/nsa/config
+
+declare -A DURATIONS
+DURATIONS=([s]=1 [m]=60 [h]=3600)
+TIMEOUT_VALUE=${SEND_TIMEOUT::-1}
+TIMEOUT_SUFFIX=${SEND_TIMEOUT: -1}
+TIMEOUT=$((TIMEOUT_VALUE * ${DURATIONS[$TIMEOUT_SUFFIX]}))
+set +a
+
+open_semaphore()
+{
+  fifo=/var/spool/nsa/pipe-$$
+  mkfifo $fifo
+  exec 3<>/$fifo
+  rm $fifo
+  local i=$1
+  for ((; i>0; i--))
+  do
+    printf %s 000 >&3
+  done
+}
+
+run_job()
+{
+  read -u 3 -n 3 -r code && ((0==code)) || exit "$code"
+  (
+    timeout_dir=/var/spool/nsa/timeout/$3
+    mkdir -p "$timeout_dir"
+    {
+      sleep $TIMEOUT
+      echo "[$(date +"$LOG_DATE_FORMAT")] sending $2 timed out" >> "$LOG_DIR/nsa-send"
+      mv "/var/spool/nsa/sending/$3/$2" "$timeout_dir"
+      kill $BASHPID
+    }&
+    timer_pid=$!
+    ( "$@"; )
+    kill $timer_pid
+    printf '%.3d' $? >&3
+  )&
+}
+
+process()
+{
+  error_dir=/var/spool/nsa/error/$2
+  sending_dir=/var/spool/nsa/sending/$2
+  mkdir -p "$error_dir"
+  file="$sending_dir/$1"
+  source "/etc/nsa/profiles.d/$2"
+  echo "[$(date +"$LOG_DATE_FORMAT")] processing $1" >> "$LOG_DIR/nsa-send"
+  if [ ! -s "$file" ] || ([ -f "$file" ] && curl -fs -H "X-Warp10-Token: $TOKEN" -H 'Transfer-Encoding: chunked' -T "$file" "$ENDPOINT")
+  then
+    rm -f "$file"
+    echo "[$(date +"$LOG_DATE_FORMAT")] $1 sent" >> $LOG_DIR/nsa-send
+  else
+    mv "$file" "$error_dir"
+    echo "[$(date +"$LOG_DATE_FORMAT")] $1 moved to error pool" >> $LOG_DIR/nsa-send
+  fi
+}
+
+open_semaphore "$SEND_JOBS"
+for dir in /var/spool/nsa/ready/*
+do
+  if [ -d "$dir" ]
+  then
+    category=$(basename "$dir")
+    ready_dir=/var/spool/nsa/ready/$category
+    sending_dir=/var/spool/nsa/sending/$category
+    mkdir -p "$sending_dir"
+    files=("$ready_dir"/*)
+    for ((i=${#files[@]}-1; i>=0; i--))
+    do
+      file=$(basename "${files[$i]}")
+      mv "$ready_dir/$file" "$sending_dir"
+      run_job process "$file" "$category"
+    done
+  fi
+done

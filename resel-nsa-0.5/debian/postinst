@@ -11,9 +11,14 @@ case "$1" in
     chown nsa:nsa /usr/libexec/nsa/nsa-collect
     chown nsa:nsa /usr/libexec/nsa/nsa-send
 
+    chown nsa:nsa /var/log/resel-nsa
+
     chown nsa:nsa /var/spool/nsa
+    chown nsa:nsa /var/spool/nsa/error
     chown nsa:nsa /var/spool/nsa/pending
     chown nsa:nsa /var/spool/nsa/ready
+    chown nsa:nsa /var/spool/nsa/sending
+    chown nsa:nsa /var/spool/nsa/timeout
   ;;
 
   abort-upgrade|abort-remove|abort-deconfigure)
