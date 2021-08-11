@@ -1,3 +1,9 @@
+resel-nsa (0.5-2) UNRELEASED; urgency=low
+
+  * Fix an error when the group `nsa' already exists.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Wed, 11 Aug 2021 21:02:00 +0200
+
 resel-nsa (0.5-1) UNRELEASED; urgency=low
 
   * Add multiprocessing capabilities,

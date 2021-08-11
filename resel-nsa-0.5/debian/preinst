@@ -4,7 +4,7 @@ set -e
 
 case "$1" in
   install)
-    addgroup --system nsa
+    addgroup --system nsa || true
     adduser --system --no-create-home --home /nonexistent nsa
     adduser nsa nsa
   ;;
