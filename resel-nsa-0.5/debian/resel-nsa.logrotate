@@ -1,8 +1,0 @@
-/var/log/resel-nsa/nsa-send {
-  compress
-  nocreate
-  daily
-  notifempty
-  rotate 7
-  missingok
-}

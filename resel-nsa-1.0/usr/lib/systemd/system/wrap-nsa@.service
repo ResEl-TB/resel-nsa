@@ -1,0 +1,11 @@
+[Unit]
+Description=NSA wrapper
+After=nsafs.service
+BindsTo=nsafs.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=oneshot
+User=nsa
+Group=nsa
+ExecStart=/usr/libexec/nsa/do %i

@@ -1,5 +1,0 @@
-#LOG_DATE_FORMAT=<Date Format>
-#TOKEN=<Default WRITE Token>
-#ENDPOINT=<Warp 10 Endpoint>
-#SEND_JOBS=<Ingress Jobs>
-#SEND_TIMEOUT=<Ingress Timeout>
