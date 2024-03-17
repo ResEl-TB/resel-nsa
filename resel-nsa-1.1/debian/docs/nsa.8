@@ -1,0 +1,62 @@
+.TH nsa 8 "17 mars 2024" "ResEl NSA" "ResEl NSA user manual"
+.SH NOM
+nsa \- Interface de contrôle de ResEl NSA
+.SH SYNOPSIS
+.B nsa (start|stop|restart|reload|status)
+
+Exécute les actions systemd correspondantes sur le service \fBnsafs\fR.
+
+.B nsa logs [OPTIONS]
+
+Affiche les journaux systemd du service \fBnsafs\fR.
+
+.B nsa schedule
+<module> <calendrier>
+
+Ordonnance un module qui n’est pas déjà ordonnancé. Retourne le code
+.B 1
+si le module n’existe pas, le code
+.B 3
+si le module est déjà ordonnancé, et le code
+.B 4
+si le calendrier est invalide.
+
+.RS 2m
+.TP 13m
+.I <module>
+Nom du module, correspondant à un exécutable dans
+\fI/usr/libexec/nsa/modules\fR.
+.TP
+.I <calendrier>
+Chaîne de caractères décrivant un calendrier systemd, ou raccourci parmi
+\fBevery-second\fR, \fBevery-minute\fR, \fBhourly\fR, \fBdaily\fR, \fBweekly\fR,
+.B monthly
+ou \fByearly\fR.
+.RE
+
+.B nsa unschedule
+<module>
+
+Supprime l’ordonnancement d’un module. Retourne le code
+.B 3
+si le module n’est pas déjà ordonnancé.
+
+.B nsa watch
+
+Affiche en temps réel les tâches
+.B ResEl NSA
+planifiées.
+
+.B nsa inspect
+
+Affiche la spoule de \fBNSAfs\fR.
+.RE
+
+Le code
+.B 2
+est retourné lorsque des paramètres inadéquats sont fournis à \fBnsa\fR.
+
+.SH VOIR AUSSI
+.BR nsa.conf (5),
+.BR nsafs (5),
+.BR resel-nsa (7)

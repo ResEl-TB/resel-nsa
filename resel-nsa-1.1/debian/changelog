@@ -1,0 +1,50 @@
+resel-nsa (1.1-1) UNRELEASED; urgency=low
+
+  * Fix issue with upstream `ocamlfuse`
+  * Improve `nsa` command with differentiated return codes
+
+ -- Benjamin Somers <benjamin.somers@resel.fr>  Sun, 17 Mar 2024 14:13:21 +0100
+
+resel-nsa (1.0-1) UNRELEASED; urgency=low
+
+  * Complete revamping in OCaml with systemd support
+
+ -- Benjamin Somers <benjamin.somers@resel.fr>  Fri, 23 Feb 2024 00:48:00 +0100
+
+resel-nsa (0.5-2) UNRELEASED; urgency=low
+
+  * Fix an error when the group `nsa' already exists.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Wed, 11 Aug 2021 21:02:00 +0200
+
+resel-nsa (0.5-1) UNRELEASED; urgency=low
+
+  * Add multiprocessing capabilities,
+  * Add log rotation,
+  * Improve code quality.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Wed, 14 Oct 2020 23:22:00 +0200
+
+resel-nsa (0.4-1) UNRELEASED; urgency=low
+
+  * Add a manager to simplify administrative tasks and create manpages.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Fri, 19 Jun 2020 03:32:00 +0200
+
+resel-nsa (0.3-1) UNRELEASED; urgency=low
+
+  * Fix permissions and dependencies and split the package into sub-packages.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Mon, 15 Jun 2020 07:25:00 +0200
+
+resel-nsa (0.2-1) UNRELEASED; urgency=low
+
+  * Further improvements.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Mon, 15 Jun 2020 06:35:25 +0200
+
+resel-nsa (0.1-1) UNRELEASED; urgency=low
+
+  * Initial release.
+
+ -- Benjamin Somers <benjamin.somers@telecom-bretagne.eu>  Sun, 05 Jan 2020 18:23:25 +0100

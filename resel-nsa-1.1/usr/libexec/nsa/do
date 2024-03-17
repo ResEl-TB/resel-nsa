@@ -1,0 +1,3 @@
+#!/bin/bash
+
+/usr/libexec/nsa/modules/${1//-/.} >> /var/spool/nsa/${1//-//}/@
