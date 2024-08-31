@@ -2,7 +2,7 @@ Source: resel-nsa
 Section: admin
 Priority: optional
 Maintainer: Benjamin Somers <benjamin.somers@resel.fr>
-Build-Depends: debhelper (>= 11)
+Build-Depends: debhelper (>= 11), debhelper-compat (= 13)
 Standards-Version: 4.1.3
 
 Package: resel-nsa

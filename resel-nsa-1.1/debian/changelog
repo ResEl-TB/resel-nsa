@@ -1,3 +1,9 @@
+resel-nsa (1.1-2) UNRELEASED; urgency=high
+
+  * Fix an error when pushing time series at the root of the FS
+
+ -- Benjamin Somers <benjamin.somers@resel.fr>  Sat, 31 Aug 2024 09:32:00 +0200
+
 resel-nsa (1.1-1) UNRELEASED; urgency=low
 
   * Fix issue with upstream `ocamlfuse`
